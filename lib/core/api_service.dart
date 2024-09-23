@@ -1,7 +1,6 @@
-import 'dart:io';
-
+import 'dart:convert';
+import 'package:bookshop/core/constants.dart';
 import 'package:dio/dio.dart';
-
 import 'datastate.dart';
 
 class ApiService {
@@ -15,14 +14,18 @@ class ApiService {
     T Function(dynamic)? fromJson,
   }) async {
     try {
-      final response = await _dio.get(url, queryParameters: queryParameters);
+      final headers = {'Authorization': token};
 
-      if (response.statusCode == HttpStatus.ok) {
-        final data =
-            fromJson != null ? fromJson(response.data) : response.data as T;
-        return DataSuccess(data);
+      final response = await _dio.get(url,
+          queryParameters: queryParameters, options: Options(headers: headers));
+
+      if (response.statusCode == 200) {
+        final data = fromJson != null
+            ? fromJson(json.decode(response.data))
+            : json.decode(response.data);
+        return DataSuccess<T>(data);
       } else {
-        return DataFailed(
+        return DataFailed<T>(
           DioException(
             requestOptions: response.requestOptions,
             error: response.statusMessage,
@@ -32,7 +35,7 @@ class ApiService {
         );
       }
     } on DioException catch (e) {
-      return DataFailed(e);
+      return DataFailed<T>(e);
     }
   }
 }
