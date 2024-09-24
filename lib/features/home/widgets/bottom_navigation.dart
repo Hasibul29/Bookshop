@@ -10,8 +10,8 @@ BottomNavigationBar bottomNavigation({selectedIndex, onItemTapped}) {
         label: "Book List",
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.book),
-        label: "Buy Book",
+        icon: Icon(Icons.translate),
+        label: "Words",
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.favorite),

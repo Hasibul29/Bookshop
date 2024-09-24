@@ -1,3 +1,4 @@
+import 'package:bookshop/features/words/words.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/appbar.dart';
@@ -33,11 +34,7 @@ class _HomeState extends State<Home> {
         index: _selectedIndex,
         children: [
           const BookListView(),
-          Container(
-            color: Colors.green,
-            width: double.infinity,
-            height: double.infinity,
-          ),
+          const Words(),
           Container(
             color: Colors.blue,
             width: double.infinity,
