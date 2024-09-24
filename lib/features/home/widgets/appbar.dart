@@ -6,8 +6,8 @@ AppBar appBar({required String title}) {
   return AppBar(
     title: DefaultText(
       text: title,
-      fontSize: 17,
-      fontWeight: FontWeight.w600,
+      fontSize: 18,
+      fontWeight: FontWeight.w700,
     ),
   );
 }

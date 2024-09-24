@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: appBar(title: 'Demo'),
+      appBar: appBar(title: 'Book Shop'),
       bottomNavigationBar: bottomNavigation(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
