@@ -7,7 +7,7 @@ BottomNavigationBar bottomNavigation({selectedIndex, onItemTapped}) {
     items: const [
       BottomNavigationBarItem(
         icon: Icon(Icons.book),
-        label: "Buy Book",
+        label: "Book List",
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.book),
