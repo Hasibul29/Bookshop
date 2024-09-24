@@ -7,7 +7,7 @@ class DefaultText extends StatelessWidget {
     required this.text,
     required this.fontWeight,
     required this.fontSize,
-    this.fontFamily = "",
+    this.fontFamily = "NotoSans",
     this.color = Colors.black,
     this.maxLines,
     this.align = TextAlign.left,

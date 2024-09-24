@@ -36,6 +36,14 @@ class ApiService {
       }
     } on DioException catch (e) {
       return DataFailed<T>(e);
+    } catch (e) {
+      return DataFailed<T>(
+        DioException(
+          requestOptions: RequestOptions(),
+          error: e,
+          type: DioExceptionType.unknown,
+        ),
+      );
     }
   }
 }
