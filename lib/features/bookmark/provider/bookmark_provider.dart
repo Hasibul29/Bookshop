@@ -11,15 +11,21 @@ final databaseProvider = FutureProvider<BookmarkDb>((ref) async {
   );
 });
 
-final getBookmarkedLevel = FutureProvider<List<BookmarkEntity>>((ref) async {
+final getBookmarkedLevel =
+    FutureProvider<List<LevelBookmarkEntity>>((ref) async {
   final database = await ref.watch(databaseProvider.future);
   return await database.bookmarkDao.getBookmarkedLevel();
 });
 
 final getBookmarkByLevelIdProvider =
-    FutureProvider.family<BookmarkEntity?, int>((ref, levelNum) async {
+    FutureProvider.family<LevelBookmarkEntity?, int>((ref, levelNum) async {
   final database = await ref.watch(databaseProvider.future);
   return await database.bookmarkDao.getBookmarkByLevelId(levelNum);
+});
+
+final getBookmarkedWord = FutureProvider<List<WordBookmarkEntity>>((ref) async {
+  final database = await ref.watch(databaseProvider.future);
+  return await database.bookmarkDao.getBookmarkedWord();
 });
 
 final bookmarkNotifierProvider =

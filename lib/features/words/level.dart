@@ -98,7 +98,7 @@ class WordsLevel extends ConsumerWidget {
 
                                 await ref
                                     .read(bookmarkNotifierProvider.notifier)
-                                    .toggleBookmark(levels[index].levelNum,
+                                    .toggleLevelBookmark(levels[index].levelNum,
                                         isBookmarkedValue);
                               },
                             ),

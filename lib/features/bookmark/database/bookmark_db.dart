@@ -6,7 +6,7 @@ import 'bookmark_dao.dart';
 
 part 'bookmark_db.g.dart';
 
-@Database(version: 1, entities: [BookmarkEntity])
+@Database(version: 1, entities: [LevelBookmarkEntity, WordBookmarkEntity])
 abstract class BookmarkDb extends FloorDatabase {
   BookmarkDao get bookmarkDao;
 }

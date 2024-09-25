@@ -33,10 +33,10 @@ class BookListView extends ConsumerWidget {
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     SizedBox(height: 14.h),
-                    DefaultText(
+                    const DefaultText(
                       text: "Book List",
                       fontWeight: FontWeight.w700,
-                      fontSize: 24.sp,
+                      fontSize: 24,
                     ),
                     SizedBox(height: 20.h),
                   ]),

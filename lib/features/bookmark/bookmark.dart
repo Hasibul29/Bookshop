@@ -1,94 +1,79 @@
+import 'dart:ffi';
+
+import 'package:bookshop/features/bookmark/level_bookmark.dart';
+import 'package:bookshop/features/bookmark/word_bookmark.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/default_text.dart';
-import 'provider/bookmark_provider.dart';
+import 'widgets/card_widget.dart';
 
-class Bookmark extends ConsumerWidget {
+class Bookmark extends StatelessWidget {
   const Bookmark({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final levelsData = ref.watch(getBookmarkedLevel);
-
-    return levelsData.when(
-      data: (levels) {
-        return CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverPadding(
-              padding: EdgeInsets.all(16.w),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  SizedBox(height: 14.h),
-                  DefaultText(
-                    text: "Bookmarked Levels",
-                    fontWeight: FontWeight.w700,
-                    fontSize: 24.sp,
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 14.h),
+          const DefaultText(
+            text: "Bookmark",
+            fontWeight: FontWeight.w700,
+            fontSize: 24,
+          ),
+          SizedBox(height: 40.h),
+          SizedBox(
+            height: 200.h,
+            width: double.infinity,
+            child: Row(
+              children: [
+                Expanded(
+                  child: CardWidget(
+                    bgColor: Colors.red,
+                    icon: Icons.book,
+                    text: "Book",
+                    onTap: () {},
                   ),
-                  SizedBox(height: 10.h),
-                ]),
-              ),
-            ),
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade100,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 5,
-                            color: Colors.black.withOpacity(0.15),
-                          )
-                        ],
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: ListTile(
-                          leading: DefaultText(
-                            align: TextAlign.center,
-                            text: levels[index].levelNum.toString(),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                          ),
-                          title: DefaultText(
-                            text: levels[index].levelNum.toString(),
-                            maxLines: 2,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                          ),
-                          trailing: IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
-                            onPressed: () async {
-                              await ref
-                                  .read(bookmarkNotifierProvider.notifier)
-                                  .toggleBookmark(levels[index].levelNum, true);
-                            },
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  childCount: levels.length,
                 ),
-              ),
+                SizedBox(width: 10.h),
+                Expanded(
+                  child: CardWidget(
+                    bgColor: Colors.green,
+                    icon: Icons.gamepad_outlined,
+                    text: "Level",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LevelBookmark(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-            SliverPadding(
-              padding: EdgeInsets.only(bottom: 20.h),
-            ),
-          ],
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stackTrace) => Center(child: Text('Error: $error')),
+          ),
+          SizedBox(height: 10.h),
+          CardWidget(
+            bgColor: Colors.blue,
+            icon: Icons.translate,
+            text: "Words",
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const WordBookmark(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/default_text.dart';
+import '../bookmark/provider/bookmark_provider.dart';
 import 'provider/words_provider.dart';
 
 class Words extends ConsumerWidget {
@@ -15,6 +16,7 @@ class Words extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wordsData = ref.watch(wordsByLevelProvider(level.levelNum));
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: DefaultAppBar(
         title: "Level ${level.levelNum}",
       ),
@@ -46,7 +48,6 @@ class Words extends ConsumerWidget {
                     (context, index) {
                       return Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
-                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.green.shade100,
                           boxShadow: [
@@ -56,27 +57,48 @@ class Words extends ConsumerWidget {
                             )
                           ],
                         ),
-                        child: InkWell(
-                          onLongPress: () {},
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              DefaultText(
-                                align: TextAlign.center,
-                                text: words[index].arabic,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                                maxLines: 10,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onLongPress: () async {
+                              await ref
+                                  .read(bookmarkNotifierProvider.notifier)
+                                  .toggleWordBookmark(
+                                      words[index].serialNum, false);
+
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    elevation: 20,
+                                    content: Text('Word added to bookmark.'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  DefaultText(
+                                    align: TextAlign.center,
+                                    text: words[index].arabic,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                    maxLines: 10,
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  DefaultText(
+                                    align: TextAlign.center,
+                                    text: words[index].english,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    maxLines: 10,
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 2.h),
-                              DefaultText(
-                                align: TextAlign.center,
-                                text: words[index].english,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                maxLines: 10,
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       );

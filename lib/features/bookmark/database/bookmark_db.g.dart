@@ -97,6 +97,8 @@ class _$BookmarkDb extends BookmarkDb {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `level_bookmark` (`level_num` INTEGER NOT NULL, PRIMARY KEY (`level_num`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `word_bookmark` (`serial_num` INTEGER NOT NULL, PRIMARY KEY (`serial_num`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -123,18 +125,18 @@ class _$BookmarkDao extends BookmarkDao {
   final QueryAdapter _queryAdapter;
 
   @override
-  Future<List<BookmarkEntity>> getBookmarkedLevel() async {
+  Future<List<LevelBookmarkEntity>> getBookmarkedLevel() async {
     return _queryAdapter.queryList('SELECT * FROM level_bookmark',
         mapper: (Map<String, Object?> row) =>
-            BookmarkEntity(row['level_num'] as int));
+            LevelBookmarkEntity(row['level_num'] as int));
   }
 
   @override
-  Future<BookmarkEntity?> getBookmarkByLevelId(int levelNum) async {
+  Future<LevelBookmarkEntity?> getBookmarkByLevelId(int levelNum) async {
     return _queryAdapter.query(
         'SELECT * FROM level_bookmark WHERE level_num = ?1',
         mapper: (Map<String, Object?> row) =>
-            BookmarkEntity(row['level_num'] as int),
+            LevelBookmarkEntity(row['level_num'] as int),
         arguments: [levelNum]);
   }
 
@@ -150,5 +152,26 @@ class _$BookmarkDao extends BookmarkDao {
     await _queryAdapter.queryNoReturn(
         'DELETE FROM level_bookmark WHERE level_num = ?1',
         arguments: [levelNum]);
+  }
+
+  @override
+  Future<List<WordBookmarkEntity>> getBookmarkedWord() async {
+    return _queryAdapter.queryList('SELECT * FROM word_bookmark',
+        mapper: (Map<String, Object?> row) =>
+            WordBookmarkEntity(row['serial_num'] as int));
+  }
+
+  @override
+  Future<void> addWrodInBookmark(int serialNum) async {
+    await _queryAdapter.queryNoReturn(
+        'INSERT INTO word_bookmark (serial_num) VALUES (?1) ON CONFLICT (serial_num) DO NOTHING',
+        arguments: [serialNum]);
+  }
+
+  @override
+  Future<void> deleteBookmarkedWord(int serialNum) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM word_bookmark WHERE serial_num = ?1',
+        arguments: [serialNum]);
   }
 }
