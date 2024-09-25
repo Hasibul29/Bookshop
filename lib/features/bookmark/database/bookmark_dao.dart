@@ -24,4 +24,16 @@ abstract class BookmarkDao {
 
   @Query('DELETE FROM word_bookmark WHERE serial_num = :serialNum')
   Future<void> deleteBookmarkedWord(int serialNum);
+
+  @Query('SELECT * FROM book_bookmark')
+  Future<List<BookBookmarkEntity>> getBookmarkedBooks();
+
+  @Query('SELECT * FROM book_bookmark WHERE id = :bookId')
+  Future<BookBookmarkEntity?> getBookmarkedBookById(String bookId);
+
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> addBookInBookmark(BookBookmarkEntity book);
+
+  @Query('DELETE FROM book_bookmark WHERE id = :bookId')
+  Future<void> deleteBookmarkedBookById(String bookId);
 }

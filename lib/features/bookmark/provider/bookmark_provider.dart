@@ -28,6 +28,17 @@ final getBookmarkedWord = FutureProvider<List<WordBookmarkEntity>>((ref) async {
   return await database.bookmarkDao.getBookmarkedWord();
 });
 
+final getBookmarkedBook = FutureProvider<List<BookBookmarkEntity>>((ref) async {
+  final database = await ref.watch(databaseProvider.future);
+  return await database.bookmarkDao.getBookmarkedBooks();
+});
+
+final getBookmarkedBookByIdProvider =
+    FutureProvider.family<BookBookmarkEntity?, String>((ref, bookId) async {
+  final database = await ref.watch(databaseProvider.future);
+  return await database.bookmarkDao.getBookmarkedBookById(bookId);
+});
+
 final bookmarkNotifierProvider =
     AsyncNotifierProvider<BookmarkNotifier, void>(() {
   return BookmarkNotifier();

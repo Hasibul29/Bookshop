@@ -1,3 +1,4 @@
+import 'package:bookshop/features/bookmark/book_bookmark.dart';
 import 'package:bookshop/features/bookmark/level_bookmark.dart';
 import 'package:bookshop/features/bookmark/word_bookmark.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,14 @@ class Bookmark extends StatelessWidget {
                     bgColor: Colors.red,
                     icon: Icons.book,
                     text: "Book",
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BookBookmark(),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 SizedBox(width: 10.h),

@@ -44,4 +44,21 @@ class BookmarkNotifier extends AsyncNotifier<void> {
     ref.invalidate(getBookmarkedWord);
     state = const AsyncData(null);
   }
+
+  Future<void> toggleBookBookmark(
+      BookBookmarkEntity bookBookmark, bool isBookmarked) async {
+    database ??= await ref.watch(databaseProvider.future);
+
+    state = const AsyncLoading();
+
+    if (isBookmarked) {
+      await database!.bookmarkDao.deleteBookmarkedBookById(bookBookmark.id);
+    } else {
+      await database!.bookmarkDao.addBookInBookmark(bookBookmark);
+    }
+
+    ref.invalidate(getBookmarkedBook);
+    ref.invalidate(getBookmarkedBookByIdProvider(bookBookmark.id));
+    state = const AsyncData(null);
+  }
 }

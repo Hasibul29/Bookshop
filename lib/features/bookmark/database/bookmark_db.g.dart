@@ -99,6 +99,8 @@ class _$BookmarkDb extends BookmarkDb {
             'CREATE TABLE IF NOT EXISTS `level_bookmark` (`level_num` INTEGER NOT NULL, `level_title` TEXT NOT NULL, PRIMARY KEY (`level_num`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `word_bookmark` (`serial_num` INTEGER NOT NULL, `arabic` TEXT NOT NULL, `english` TEXT NOT NULL, PRIMARY KEY (`serial_num`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `book_bookmark` (`id` TEXT NOT NULL, `book_image` TEXT NOT NULL, `book_cover_image` TEXT NOT NULL, `book_name` TEXT NOT NULL, `book_writer` TEXT NOT NULL, `book_status` TEXT NOT NULL, `book_available` TEXT NOT NULL, `book_notavailable` TEXT NOT NULL, `book_review` TEXT NOT NULL, `book_type` TEXT NOT NULL, `book_publisher` TEXT NOT NULL, `total_read` TEXT NOT NULL, `book_average_review` TEXT NOT NULL, `book_category` TEXT NOT NULL, `book_state` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -131,6 +133,26 @@ class _$BookmarkDao extends BookmarkDao {
                   'serial_num': item.serialNum,
                   'arabic': item.arabic,
                   'english': item.english
+                }),
+        _bookBookmarkEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'book_bookmark',
+            (BookBookmarkEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'book_image': item.bookImage,
+                  'book_cover_image': item.bookCoverImage,
+                  'book_name': item.bookName,
+                  'book_writer': item.bookWriter,
+                  'book_status': item.bookStatus,
+                  'book_available': item.bookAvailable,
+                  'book_notavailable': item.bookNotAvailable,
+                  'book_review': item.bookReview,
+                  'book_type': item.bookType,
+                  'book_publisher': item.bookPublisher,
+                  'total_read': item.totalRead,
+                  'book_average_review': item.bookAverageReview,
+                  'book_category': item.bookCategory,
+                  'book_state': item.bookState
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -144,6 +166,9 @@ class _$BookmarkDao extends BookmarkDao {
 
   final InsertionAdapter<WordBookmarkEntity>
       _wordBookmarkEntityInsertionAdapter;
+
+  final InsertionAdapter<BookBookmarkEntity>
+      _bookBookmarkEntityInsertionAdapter;
 
   @override
   Future<List<LevelBookmarkEntity>> getBookmarkedLevel() async {
@@ -185,6 +210,55 @@ class _$BookmarkDao extends BookmarkDao {
   }
 
   @override
+  Future<List<BookBookmarkEntity>> getBookmarkedBooks() async {
+    return _queryAdapter.queryList('SELECT * FROM book_bookmark',
+        mapper: (Map<String, Object?> row) => BookBookmarkEntity(
+            id: row['id'] as String,
+            bookImage: row['book_image'] as String,
+            bookCoverImage: row['book_cover_image'] as String,
+            bookName: row['book_name'] as String,
+            bookWriter: row['book_writer'] as String,
+            bookStatus: row['book_status'] as String,
+            bookAvailable: row['book_available'] as String,
+            bookNotAvailable: row['book_notavailable'] as String,
+            bookReview: row['book_review'] as String,
+            bookType: row['book_type'] as String,
+            bookPublisher: row['book_publisher'] as String,
+            totalRead: row['total_read'] as String,
+            bookAverageReview: row['book_average_review'] as String,
+            bookCategory: row['book_category'] as String,
+            bookState: row['book_state'] as String));
+  }
+
+  @override
+  Future<BookBookmarkEntity?> getBookmarkedBookById(String bookId) async {
+    return _queryAdapter.query('SELECT * FROM book_bookmark WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => BookBookmarkEntity(
+            id: row['id'] as String,
+            bookImage: row['book_image'] as String,
+            bookCoverImage: row['book_cover_image'] as String,
+            bookName: row['book_name'] as String,
+            bookWriter: row['book_writer'] as String,
+            bookStatus: row['book_status'] as String,
+            bookAvailable: row['book_available'] as String,
+            bookNotAvailable: row['book_notavailable'] as String,
+            bookReview: row['book_review'] as String,
+            bookType: row['book_type'] as String,
+            bookPublisher: row['book_publisher'] as String,
+            totalRead: row['total_read'] as String,
+            bookAverageReview: row['book_average_review'] as String,
+            bookCategory: row['book_category'] as String,
+            bookState: row['book_state'] as String),
+        arguments: [bookId]);
+  }
+
+  @override
+  Future<void> deleteBookmarkedBookById(String bookId) async {
+    await _queryAdapter.queryNoReturn('DELETE FROM book_bookmark WHERE id = ?1',
+        arguments: [bookId]);
+  }
+
+  @override
   Future<void> addLevelInBookmark(LevelBookmarkEntity levelBookmark) async {
     await _levelBookmarkEntityInsertionAdapter.insert(
         levelBookmark, OnConflictStrategy.replace);
@@ -194,5 +268,11 @@ class _$BookmarkDao extends BookmarkDao {
   Future<void> addWrodInBookmark(WordBookmarkEntity wordBookmark) async {
     await _wordBookmarkEntityInsertionAdapter.insert(
         wordBookmark, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> addBookInBookmark(BookBookmarkEntity book) async {
+    await _bookBookmarkEntityInsertionAdapter.insert(
+        book, OnConflictStrategy.replace);
   }
 }

@@ -1,19 +1,40 @@
 import 'package:bookshop/common/default_text.dart';
 import 'package:bookshop/features/booklist/models/booklist_model.dart';
+import 'package:bookshop/features/bookmark/database/bookmark_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/default_appbar.dart';
+import '../bookmark/provider/bookmark_provider.dart';
 
-class BookDetails extends StatelessWidget {
+class BookDetails extends ConsumerWidget {
   final Book book;
   const BookDetails({super.key, required this.book});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isBookmarked = ref.watch(getBookmarkedBookByIdProvider(book.id));
     return Scaffold(
-      appBar: DefaultAppBar(title: book.bookName),
+      appBar: DefaultAppBar(
+        title: book.bookName,
+        hasActionButton: true,
+        icon: isBookmarked.maybeWhen(
+          data: (bookmarked) => bookmarked != null
+              ? const Icon(Icons.star, color: Colors.green)
+              : const Icon(Icons.star_border_outlined),
+          orElse: () => const Icon(Icons.star_border_outlined),
+        ),
+        onPressed: () async {
+          bool isBookmarkedValue = isBookmarked.maybeWhen(
+            data: (bookmarked) => bookmarked != null,
+            orElse: () => false,
+          );
+          await ref.read(bookmarkNotifierProvider.notifier).toggleBookBookmark(
+              BookBookmarkEntity.fromBook(book), isBookmarkedValue);
+        },
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: ListView(
