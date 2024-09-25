@@ -14,8 +14,8 @@ BottomNavigationBar bottomNavigation({selectedIndex, onItemTapped}) {
         label: "Words",
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.favorite),
-        label: "Favorite",
+        icon: Icon(Icons.bookmark),
+        label: "Bookmark",
       ),
     ],
   );

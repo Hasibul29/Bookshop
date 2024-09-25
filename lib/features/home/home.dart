@@ -1,6 +1,7 @@
 import 'package:bookshop/features/words/level.dart';
 import 'package:flutter/material.dart';
 
+import '../bookmark/bookmark.dart';
 import 'widgets/appbar.dart';
 import '../booklist/booklist.dart';
 import 'widgets/bottom_navigation.dart';
@@ -32,14 +33,10 @@ class _HomeState extends State<Home> {
       ),
       body: IndexedStack(
         index: _selectedIndex,
-        children: [
-          const BookListView(),
-          const WordsLevel(),
-          Container(
-            color: Colors.blue,
-            width: double.infinity,
-            height: double.infinity,
-          ),
+        children: const [
+          BookListView(),
+          WordsLevel(),
+          Bookmark(),
         ],
       ),
     );

@@ -46,7 +46,7 @@ class Words extends ConsumerWidget {
                     (context, index) {
                       return Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.green.shade100,
                           boxShadow: [
@@ -56,25 +56,28 @@ class Words extends ConsumerWidget {
                             )
                           ],
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            DefaultText(
-                              align: TextAlign.center,
-                              text: words[index].arabic,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 18,
-                              maxLines: 10,
-                            ),
-                            const SizedBox(height: 2),
-                            DefaultText(
-                              align: TextAlign.center,
-                              text: words[index].english,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              maxLines: 10,
-                            ),
-                          ],
+                        child: InkWell(
+                          onLongPress: () {},
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              DefaultText(
+                                align: TextAlign.center,
+                                text: words[index].arabic,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18,
+                                maxLines: 10,
+                              ),
+                              SizedBox(height: 2.h),
+                              DefaultText(
+                                align: TextAlign.center,
+                                text: words[index].english,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                maxLines: 10,
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
