@@ -54,17 +54,28 @@ class WordBookmark extends ConsumerWidget {
                         child: Material(
                           color: Colors.transparent,
                           child: ListTile(
-                            leading: DefaultText(
-                              align: TextAlign.center,
-                              text: words[index].serialNum.toString(),
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                            ),
-                            title: DefaultText(
-                              text: words[index].serialNum.toString(),
-                              maxLines: 2,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
+                            title: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  DefaultText(
+                                    align: TextAlign.center,
+                                    text: words[index].arabic,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                    maxLines: 10,
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  DefaultText(
+                                    align: TextAlign.center,
+                                    text: words[index].english,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    maxLines: 10,
+                                  ),
+                                ],
+                              ),
                             ),
                             trailing: IconButton(
                               icon: const Icon(
@@ -74,8 +85,7 @@ class WordBookmark extends ConsumerWidget {
                               onPressed: () async {
                                 await ref
                                     .read(bookmarkNotifierProvider.notifier)
-                                    .toggleWordBookmark(
-                                        words[index].serialNum, true);
+                                    .toggleWordBookmark(words[index], true);
                               },
                             ),
                           ),

@@ -1,4 +1,6 @@
 import 'package:bookshop/common/default_appbar.dart';
+import 'package:bookshop/features/words/database/words_entity.dart';
+import 'package:bookshop/features/words/words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -54,6 +56,17 @@ class LevelBookmark extends ConsumerWidget {
                         child: Material(
                           color: Colors.transparent,
                           child: ListTile(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Words(
+                                    level: LevelsEntity(levels[index].levelNum,
+                                        levels[index].levelTitle),
+                                  ),
+                                ),
+                              );
+                            },
                             leading: DefaultText(
                               align: TextAlign.center,
                               text: levels[index].levelNum.toString(),
@@ -61,7 +74,7 @@ class LevelBookmark extends ConsumerWidget {
                               fontSize: 16,
                             ),
                             title: DefaultText(
-                              text: levels[index].levelNum.toString(),
+                              text: levels[index].levelTitle,
                               maxLines: 2,
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
@@ -74,8 +87,7 @@ class LevelBookmark extends ConsumerWidget {
                               onPressed: () async {
                                 await ref
                                     .read(bookmarkNotifierProvider.notifier)
-                                    .toggleLevelBookmark(
-                                        levels[index].levelNum, true);
+                                    .toggleLevelBookmark(levels[index], true);
                               },
                             ),
                           ),

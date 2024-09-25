@@ -1,3 +1,4 @@
+import 'package:bookshop/features/bookmark/database/bookmark_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../database/bookmark_db.dart';
@@ -11,31 +12,33 @@ class BookmarkNotifier extends AsyncNotifier<void> {
     database ??= await ref.watch(databaseProvider.future);
   }
 
-  Future<void> toggleLevelBookmark(int levelNum, bool isBookmarked) async {
+  Future<void> toggleLevelBookmark(
+      LevelBookmarkEntity levelBookmark, bool isBookmarked) async {
     database ??= await ref.watch(databaseProvider.future);
 
     state = const AsyncLoading();
 
     if (isBookmarked) {
-      await database!.bookmarkDao.deleteBookmarkedLevel(levelNum);
+      await database!.bookmarkDao.deleteBookmarkedLevel(levelBookmark.levelNum);
     } else {
-      await database!.bookmarkDao.addLevelIdInBookmark(levelNum);
+      await database!.bookmarkDao.addLevelInBookmark(levelBookmark);
     }
 
     ref.invalidate(getBookmarkedLevel);
-    ref.invalidate(getBookmarkByLevelIdProvider(levelNum));
+    ref.invalidate(getBookmarkByLevelIdProvider(levelBookmark.levelNum));
     state = const AsyncData(null);
   }
 
-  Future<void> toggleWordBookmark(int serialNum, bool isBookmarked) async {
+  Future<void> toggleWordBookmark(
+      WordBookmarkEntity wordBookmark, bool isBookmarked) async {
     database ??= await ref.watch(databaseProvider.future);
 
     state = const AsyncLoading();
 
     if (isBookmarked) {
-      await database!.bookmarkDao.deleteBookmarkedWord(serialNum);
+      await database!.bookmarkDao.deleteBookmarkedWord(wordBookmark.serialNum);
     } else {
-      await database!.bookmarkDao.addWrodInBookmark(serialNum);
+      await database!.bookmarkDao.addWrodInBookmark(wordBookmark);
     }
 
     ref.invalidate(getBookmarkedWord);

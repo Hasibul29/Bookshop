@@ -1,4 +1,5 @@
 import 'package:bookshop/common/default_appbar.dart';
+import 'package:bookshop/features/bookmark/database/bookmark_entity.dart';
 import 'package:bookshop/features/words/database/words_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,14 +65,18 @@ class Words extends ConsumerWidget {
                               await ref
                                   .read(bookmarkNotifierProvider.notifier)
                                   .toggleWordBookmark(
-                                      words[index].serialNum, false);
+                                      WordBookmarkEntity(
+                                          words[index].serialNum,
+                                          words[index].arabic,
+                                          words[index].english),
+                                      false);
 
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     elevation: 20,
                                     content: Text('Word added to bookmark.'),
-                                    duration: Duration(seconds: 2),
+                                    duration: Duration(seconds: 1),
                                   ),
                                 );
                               }

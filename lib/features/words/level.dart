@@ -1,3 +1,4 @@
+import 'package:bookshop/features/bookmark/database/bookmark_entity.dart';
 import 'package:bookshop/features/words/words.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -98,7 +99,10 @@ class WordsLevel extends ConsumerWidget {
 
                                 await ref
                                     .read(bookmarkNotifierProvider.notifier)
-                                    .toggleLevelBookmark(levels[index].levelNum,
+                                    .toggleLevelBookmark(
+                                        LevelBookmarkEntity(
+                                            levels[index].levelNum,
+                                            levels[index].levelTitle),
                                         isBookmarkedValue);
                               },
                             ),

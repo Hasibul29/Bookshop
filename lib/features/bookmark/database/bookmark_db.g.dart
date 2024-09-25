@@ -96,9 +96,9 @@ class _$BookmarkDb extends BookmarkDb {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `level_bookmark` (`level_num` INTEGER NOT NULL, PRIMARY KEY (`level_num`))');
+            'CREATE TABLE IF NOT EXISTS `level_bookmark` (`level_num` INTEGER NOT NULL, `level_title` TEXT NOT NULL, PRIMARY KEY (`level_num`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `word_bookmark` (`serial_num` INTEGER NOT NULL, PRIMARY KEY (`serial_num`))');
+            'CREATE TABLE IF NOT EXISTS `word_bookmark` (`serial_num` INTEGER NOT NULL, `arabic` TEXT NOT NULL, `english` TEXT NOT NULL, PRIMARY KEY (`serial_num`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -116,7 +116,22 @@ class _$BookmarkDao extends BookmarkDao {
   _$BookmarkDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _levelBookmarkEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'level_bookmark',
+            (LevelBookmarkEntity item) => <String, Object?>{
+                  'level_num': item.levelNum,
+                  'level_title': item.levelTitle
+                }),
+        _wordBookmarkEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'word_bookmark',
+            (WordBookmarkEntity item) => <String, Object?>{
+                  'serial_num': item.serialNum,
+                  'arabic': item.arabic,
+                  'english': item.english
+                });
 
   final sqflite.DatabaseExecutor database;
 
@@ -124,26 +139,25 @@ class _$BookmarkDao extends BookmarkDao {
 
   final QueryAdapter _queryAdapter;
 
+  final InsertionAdapter<LevelBookmarkEntity>
+      _levelBookmarkEntityInsertionAdapter;
+
+  final InsertionAdapter<WordBookmarkEntity>
+      _wordBookmarkEntityInsertionAdapter;
+
   @override
   Future<List<LevelBookmarkEntity>> getBookmarkedLevel() async {
     return _queryAdapter.queryList('SELECT * FROM level_bookmark',
-        mapper: (Map<String, Object?> row) =>
-            LevelBookmarkEntity(row['level_num'] as int));
+        mapper: (Map<String, Object?> row) => LevelBookmarkEntity(
+            row['level_num'] as int, row['level_title'] as String));
   }
 
   @override
   Future<LevelBookmarkEntity?> getBookmarkByLevelId(int levelNum) async {
     return _queryAdapter.query(
         'SELECT * FROM level_bookmark WHERE level_num = ?1',
-        mapper: (Map<String, Object?> row) =>
-            LevelBookmarkEntity(row['level_num'] as int),
-        arguments: [levelNum]);
-  }
-
-  @override
-  Future<void> addLevelIdInBookmark(int levelNum) async {
-    await _queryAdapter.queryNoReturn(
-        'INSERT INTO level_bookmark (level_num) VALUES (?1)',
+        mapper: (Map<String, Object?> row) => LevelBookmarkEntity(
+            row['level_num'] as int, row['level_title'] as String),
         arguments: [levelNum]);
   }
 
@@ -157,15 +171,10 @@ class _$BookmarkDao extends BookmarkDao {
   @override
   Future<List<WordBookmarkEntity>> getBookmarkedWord() async {
     return _queryAdapter.queryList('SELECT * FROM word_bookmark',
-        mapper: (Map<String, Object?> row) =>
-            WordBookmarkEntity(row['serial_num'] as int));
-  }
-
-  @override
-  Future<void> addWrodInBookmark(int serialNum) async {
-    await _queryAdapter.queryNoReturn(
-        'INSERT INTO word_bookmark (serial_num) VALUES (?1) ON CONFLICT (serial_num) DO NOTHING',
-        arguments: [serialNum]);
+        mapper: (Map<String, Object?> row) => WordBookmarkEntity(
+            row['serial_num'] as int,
+            row['arabic'] as String,
+            row['english'] as String));
   }
 
   @override
@@ -173,5 +182,17 @@ class _$BookmarkDao extends BookmarkDao {
     await _queryAdapter.queryNoReturn(
         'DELETE FROM word_bookmark WHERE serial_num = ?1',
         arguments: [serialNum]);
+  }
+
+  @override
+  Future<void> addLevelInBookmark(LevelBookmarkEntity levelBookmark) async {
+    await _levelBookmarkEntityInsertionAdapter.insert(
+        levelBookmark, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> addWrodInBookmark(WordBookmarkEntity wordBookmark) async {
+    await _wordBookmarkEntityInsertionAdapter.insert(
+        wordBookmark, OnConflictStrategy.replace);
   }
 }
