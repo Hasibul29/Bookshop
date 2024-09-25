@@ -25,10 +25,10 @@ class WordsLevel extends ConsumerWidget {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   SizedBox(height: 14.h),
-                  DefaultText(
+                  const DefaultText(
                     text: "Levels",
                     fontWeight: FontWeight.w700,
-                    fontSize: 24.sp,
+                    fontSize: 24,
                   ),
                   SizedBox(height: 10.h),
                 ]),

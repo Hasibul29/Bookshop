@@ -34,11 +34,17 @@ class Words extends ConsumerWidget {
                     DefaultText(
                       text: level.levelTitle,
                       fontWeight: FontWeight.w700,
-                      fontSize: 24.sp,
+                      fontSize: 24,
                       maxLines: 5,
                       height: 30,
                     ),
                     SizedBox(height: 10.h),
+                    const DefaultText(
+                      text: "Longpress to add to bookmark.",
+                      fontWeight: FontWeight.w300,
+                      fontSize: 12,
+                      maxLines: 5,
+                    ),
                   ]),
                 ),
               ),
